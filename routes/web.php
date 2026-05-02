@@ -1,15 +1,23 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return to_route('admin-painel.dashboard');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::prefix('painel-dona-bebeth')->group(function(){
+
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('admin-painel.dashboard');
+
+    Route::resource('categories', CategoryController::class);
+
+})->middleware(['auth','verified']);
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
