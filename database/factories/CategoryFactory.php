@@ -3,11 +3,13 @@
 namespace Database\Factories;
 
 use App\Models\Category;
+use Illuminate\Database\Eloquent\Factories\Attributes\UseModel;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @extends Factory<Category>
  */
+#[UseModel(Category::class)]
 class CategoryFactory extends Factory
 {
     /**
@@ -15,10 +17,12 @@ class CategoryFactory extends Factory
      *
      * @return array<string, mixed>
      */
+
     public function definition(): array
     {
         return [
-            //
+            'name' => fake()->sentence(),
+            'description' => fake()->text(),
         ];
     }
 }

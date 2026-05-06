@@ -13,8 +13,8 @@ class CategoryController extends Controller
 {
     public function create(Request $request): View
     {
-        
-        return view('categories');
+
+        return view('cards.categorie-create');
     }
 
     /**
@@ -22,33 +22,38 @@ class CategoryController extends Controller
      */
     public function store(StoreCategoryRequest $request): RedirectResponse
     {
+
         Category::create($request->validated());
 
-        return to_route('admin-painel.dashboard');
+        return to_route('admin-painel.cards');
     }
 
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Category $category)
+    public function edit(Category $category, Request $request): View
     {
-        //
+        return view('cards.categorie-edit');
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateCategoryRequest $request, Category $category)
+    public function update(UpdateCategoryRequest $request, Category $category): RedirectResponse
     {
-        //
+        $category->update($request->validated());
+
+        return to_route('admin-painel.cards');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Category $category)
+    public function destroy(Category $category): RedirectResponse
     {
-        //
+        $category->delete();
+
+        return to_route('admin-painel.cards');
     }
 }

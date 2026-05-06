@@ -18,7 +18,7 @@
                 </div>
 
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link>
+                    <x-nav-link :href="route('admin-painel.cards')" :active="request()->routeIS('admin-painel.cards')">
                         {{ __('Cards') }}
                     </x-nav-link>
                 </div>
@@ -81,6 +81,12 @@
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('admin-painel.dashboard')" :active="request()->routeIs('admin-painel.dashboard')">
                 {{ __('Dashboard') }}
+            </x-responsive-nav-link>
+        </div>
+
+         <div class="pt-2 pb-3 space-y-1">
+            <x-responsive-nav-link :href="route('admin-painel.cards')" :active="request()->routeIs('admin-painel.cards')">
+                {{ __('Cards') }}
             </x-responsive-nav-link>
         </div>
 

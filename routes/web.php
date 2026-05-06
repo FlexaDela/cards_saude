@@ -9,9 +9,13 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['auth', 'verified'])->group(function(){
     Route::prefix('painel-dona-bebeth')->group(function() {
 
-        Route::get('/dashboard', function () {
+        Route::get('dashboard', function () {
             return view('dashboard');
         })->name('admin-painel.dashboard');
+
+        Route::get('cards', function(){
+            return view('cards');
+        })->name('admin-painel.cards');
 
         Route::prefix('cards')->group(function(){
             Route::resource('categories', CategoryController::class)->except('show','index');
