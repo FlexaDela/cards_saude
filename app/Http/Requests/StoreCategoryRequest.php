@@ -23,7 +23,7 @@ class StoreCategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' =>['required','string','max:100','regex:/^[\pL\pN]+$/u'],
+            'name' => ['required', 'string', 'max:100', 'regex:/^[\pL\pN]+(?:\s[\pL\pN]+)*$/u'],
             'description' => ['string']
         ];
     }

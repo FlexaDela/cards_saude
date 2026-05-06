@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Cards;
 
+use App\Models\Category;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -51,7 +52,7 @@ class CategoriesTest extends TestCase
         ->actingAs($user)
         ->post('painel-dona-bebeth/cards/categories',
         [
-            'name' => 'test .',
+            'name' => 'test. ',
             'description' => 'Mussum Ipsum, cacilds vidis litro abertis. Delegadis gente finis, bibendum egestas augue arcu ut est.'
         ]);
 
@@ -60,5 +61,31 @@ class CategoriesTest extends TestCase
         ->assertStatus(302);
     }
 
-    #public function teste_edit_category(): void {}
+    public function test_edit_category(): void
+    {
+        $this->withoutExceptionHandling();
+
+        $user = User::factory()->create();
+        $category = Category::factory()->create([
+            'name' => 'old name',
+            'description' => 'old description'
+        ]);
+
+        $response = $this
+        ->actingAs($user)
+        ->put("painel-dona-bebeth/cards/categories/{$category->id}",
+        [
+            'name' => "another name",
+            'description' => "another description"
+        ]);
+
+        $response->assertSessionHasNoErrors();
+        $response->assertStatus(302);
+
+        $this->assertDatabaseHas('categories', [
+            'id' => $category->id,
+            'name' => "another name",
+            'description' => "another description"
+        ]);
+    }
 }
