@@ -13,6 +13,12 @@ return new class extends Migration
     {
         Schema::create('cards', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('category_id')->constrained()->onDelete('cascade');
+            $table->string('name', length:100);
+            $table->text('description')->nullable();
+            $table->boolean('available')->default(false);
+            $table->boolean('show')->default(false);
+            $table->decimal('price', total:10, places:2);
             $table->timestamps();
         });
     }

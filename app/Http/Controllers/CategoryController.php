@@ -25,7 +25,7 @@ class CategoryController extends Controller
 
         Category::create($request->validated());
 
-        return to_route('admin-painel.cards');
+        return to_route('cards.index');
     }
 
 
@@ -44,7 +44,7 @@ class CategoryController extends Controller
     {
         $category->update($request->validated());
 
-        return to_route('admin-painel.cards');
+        return to_route('cards.index');
     }
 
     /**
@@ -54,6 +54,6 @@ class CategoryController extends Controller
     {
         $category->delete();
 
-        return to_route('admin-painel.cards');
+        return to_route('cards.index');
     }
 }

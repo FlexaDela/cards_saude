@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CardController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -13,15 +14,12 @@ Route::middleware(['auth', 'verified'])->group(function(){
             return view('dashboard');
         })->name('admin-painel.dashboard');
 
-        Route::get('cards', function(){
-            return view('cards');
-        })->name('admin-painel.cards');
-
         Route::prefix('cards')->group(function(){
             Route::resource('categories', CategoryController::class)->except('show','index');
         });
 
-        Route::prefix('agendamento')->group(function(){});
+        Route::resource('cards', CardController::class);
+
     });
 });
 
