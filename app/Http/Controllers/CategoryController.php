@@ -14,7 +14,7 @@ class CategoryController extends Controller
     public function create(Request $request): View
     {
 
-        return view('cards.categorie-create');
+        return view('cards.category-create');
     }
 
     /**
@@ -34,7 +34,7 @@ class CategoryController extends Controller
      */
     public function edit(Category $category, Request $request): View
     {
-        return view('cards.categorie-edit');
+        return view('cards.category-edit')->with('category',$category);
     }
 
     /**
