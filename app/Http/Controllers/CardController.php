@@ -34,7 +34,10 @@ class CardController extends Controller
      */
     public function store(StoreCardRequest $request): RedirectResponse
     {
-        Card::create($request->validated());
+        $card = Card::create($request->validated());
+
+        $card->categories()->sync($request->categories);
+
         return to_route('cards.index');
     }
 
@@ -61,6 +64,8 @@ class CardController extends Controller
     public function update(UpdateCardRequest $request, Card $card): RedirectResponse
     {
         $card->update($request->validated());
+        $card->categories()->sync($request->categories);
+        
         return to_route('cards.edit', $card->id);
     }
 

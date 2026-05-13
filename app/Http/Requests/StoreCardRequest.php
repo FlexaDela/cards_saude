@@ -25,7 +25,8 @@ class StoreCardRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:100', 'regex:/^[\pL\pN]+(?:\s[\pL\pN]+)*$/u'],
             'description' => ['nullable', 'string'],
-            'category_id' => ['required', 'exists:categories,id'],
+            'categories' => ['required', 'array'],
+            'categories.*' => ['exists:categories,id'],
             'available' => ['sometimes', 'boolean'],
             'show' => ['sometimes', 'boolean'],
             'price' => ['required', 'numeric', 'min:0'],

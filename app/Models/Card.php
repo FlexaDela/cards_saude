@@ -14,7 +14,7 @@ class Card extends Model
 {
     /** @use HasFactory<\Database\Factories\CardFactory> */
     use HasFactory;
-    protected $fillable = ['name', 'description', 'category_id', 'available', 'show', 'price'];
+    protected $fillable = ['name', 'description', 'available', 'show', 'price'];
 
 
     #[Override]
@@ -35,7 +35,7 @@ class Card extends Model
         );
     }
 
-    public function category():BelongsToMany
+    public function categories():BelongsToMany
     {
         return $this->belongsToMany(Category::class, 'category_card');
     }

@@ -30,15 +30,21 @@
                     <!-- Grid Responsivo para Categoria e Preço -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         <!-- Categoria -->
-                        <div>
-                            <x-input-label for="category_id" :value="__('Categoria')" />
-                            <select id="category_id" name="category_id" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block mt-1 w-full">
+                        <div class="mt-4">
+                            <x-input-label for="categories" :value="__('Categorias (Selecione uma ou mais)')" />
+
+                            <select id="categories" name="categories[]" multiple
+                                    class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm h-40">
                                 @foreach($categories as $category)
-                                    <option value="{{ $category->id }}" {{ old('category_id', $card->category_id) == $category->id ? 'selected' : '' }}>
+                                    <option value="{{ $category->id }}"
+                                        @if(isset($card) && $card->categories->contains($category->id)) selected @endif>
                                         {{ $category->name }}
                                     </option>
                                 @endforeach
                             </select>
+
+                            <p class="text-xs text-gray-500 mt-1 italic">Segure Ctrl (Windows) ou Command (Mac) para selecionar mais de uma.</p>
+                            <x-input-error :messages="$errors->get('categories')" class="mt-2" />
                         </div>
 
                         <!-- Preço -->
