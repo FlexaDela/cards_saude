@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Override;
 
 class Card extends Model
@@ -40,5 +41,8 @@ class Card extends Model
         return $this->belongsToMany(Category::class, 'category_card');
     }
 
-
+    public function cardImages(): HasMany
+    {
+        return $this->hasMany(CardImage::class);
+    }
 }
