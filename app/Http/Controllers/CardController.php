@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateCardRequest;
 use App\Models\Card;
 use App\Models\Category;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class CardController extends Controller
@@ -14,10 +15,31 @@ class CardController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): View
+    public function index(Request $request): View
     {
-        $categories = Category::with('cards')->get();
-        return view('cards')->with('categories', $categories);
+        $query = Card::with('categories');
+
+
+        $query->when($request->disponivel, function ($q) {
+            return $q->where('available', true);
+        });
+
+
+        $query->when($request->visivel, function ($q) {
+            return $q->where('show', true);
+        });
+
+
+        $query->when($request->category_id, function ($q) use ($request) {
+            return $q->whereHas('categories', function ($subQuery) use ($request) {
+                $subQuery->where('categories.id', $request->category_id);
+            });
+        });
+
+        $cards = $query->get();
+        $categories = Category::all();
+
+        return view('cards', compact('cards', 'categories'));
     }
 
     /**
@@ -55,7 +77,7 @@ class CardController extends Controller
     public function edit(Card $card): View
     {
         $categories = Category::all();
-        return view('cards.card-edit')->with('card',$card)->with('categories',$categories);
+        return view('cards.card-edit', compact('categories','card'));
     }
 
     /**
@@ -65,7 +87,7 @@ class CardController extends Controller
     {
         $card->update($request->validated());
         $card->categories()->sync($request->categories);
-        
+
         return to_route('cards.edit', $card->id);
     }
 
