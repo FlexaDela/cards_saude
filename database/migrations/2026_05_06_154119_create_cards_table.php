@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('cards', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('category_id')->constrained()->onDelete('cascade');
             $table->string('name', length:100);
             $table->text('description')->nullable();
             $table->boolean('available')->default(false);
