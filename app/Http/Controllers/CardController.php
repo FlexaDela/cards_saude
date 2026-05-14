@@ -16,8 +16,12 @@ class CardController extends Controller
      */
     public function index(): View
     {
-        $categories = Category::with('cards')->get();
-        return view('cards')->with('categories', $categories);
+        $categories = Category::all();
+        $cards = Card::with('categories')->get();
+
+
+
+        return view('cards')->with('categories', $categories)->with('cards',$cards);
     }
 
     /**
@@ -64,8 +68,9 @@ class CardController extends Controller
     public function update(UpdateCardRequest $request, Card $card): RedirectResponse
     {
         $card->update($request->validated());
+
         $card->categories()->sync($request->categories);
-        
+
         return to_route('cards.edit', $card->id);
     }
 

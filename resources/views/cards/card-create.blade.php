@@ -28,17 +28,19 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                         <!-- Categoria -->
-                        <div>
-                            <x-input-label for="category_id" :value="__('Categoria')" />
-                            <select id="category_id" name="category_id" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block mt-1 w-full">
-                                <option value="">Selecione uma categoria</option>
-                                @foreach($categories as $category)
-                                    <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
-                                        {{ $category->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            <x-input-error :messages="$errors->get('category_id')" class="mt-2" />
+
+                        <div class="mt-4">
+                            <x-input-label for="categories" :value="__('Selecione as Categorias')" />
+                                <!-- O nome 'categories[]' com colchetes é obrigatório para enviar um array -->
+                                <select id="categories" name="categories[]" multiple class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm h-40">
+                                    @foreach($categories as $category)
+                                        <option value="{{ $category->id }}"
+                                            {{ (is_array(old('categories')) && in_array($category->id, old('categories'))) ? 'selected' : '' }}>
+                                            {{ $category->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            <x-input-error :messages="$errors->get('categories')" class="mt-2" />
                         </div>
 
                         <!-- Preço -->

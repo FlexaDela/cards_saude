@@ -25,7 +25,8 @@ class UpdateCardRequest extends FormRequest
         return [
             'name' => ['sometimes', 'string', 'max:100', 'regex:/^[\pL\pN]+(?:\s[\pL\pN]+)*$/u'],
             'description' => ['sometimes', 'nullable','string'],
-            'category_id' => ['required', 'exists:categories,id'],
+            'categories' => ['required', 'array'],
+            'categories.*' => ['exists:categories,id'],
             'available' => ['sometimes', 'boolean'],
             'show' => ['sometimes', 'boolean'],
             'price' => ['sometimes', 'numeric', 'min:0'],
