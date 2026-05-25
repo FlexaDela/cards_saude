@@ -24,7 +24,7 @@ class UpdateCardRequest extends FormRequest
     {
         return [
             'name' => ['sometimes', 'string', 'max:100', 'regex:/^[\pL\pN]+(?:\s[\pL\pN]+)*$/u'],
-            'image'=> [],
+            //'image'=> [],
             'description' => ['sometimes', 'nullable','string'],
             'categories' => ['required', 'array'],
             'categories.*' => ['exists:categories,id'],

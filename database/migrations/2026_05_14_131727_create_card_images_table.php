@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('card_images', function (Blueprint $table) {
             $table->id();
             $table->foreignId('card_id')->constrained()->onDelete('cascade');
-            $table->string('path');
+            $table->string('path')->unique();
             $table->boolean('principal')->default(false);
             $table->timestamps();
         });

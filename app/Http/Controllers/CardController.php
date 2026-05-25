@@ -6,12 +6,15 @@ use App\Http\Requests\StoreCardRequest;
 use App\Http\Requests\UpdateCardRequest;
 use App\Models\Card;
 use App\Models\Category;
+use App\Traits\ImageUploadTrait;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class CardController extends Controller
 {
+    use ImageUploadTrait;
+
     /**
      * Display a listing of the resource.
      */
@@ -59,10 +62,18 @@ class CardController extends Controller
     public function store(StoreCardRequest $request): RedirectResponse
     {
         $card = Card::create($request->validated());
-
         $card->categories()->sync($request->categories);
 
-        return to_route('cards.index');
+        $imagesPaths = $this->imageUpload($request);
+
+        foreach($imagesPaths as $key => $path){
+            $card->cardImages()->create([
+                'path'=> $path,
+                'principal' => ($key === 0)
+            ]);
+        }
+
+        return to_route('cards.index')->with('sucess', 'Card criado com sucesso');
     }
 
     /**

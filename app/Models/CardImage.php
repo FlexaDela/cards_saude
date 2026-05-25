@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class CardImage extends Model
 {
-    
+    protected $fillable = ['card_id','path','principal'];
+
     public function card(): BelongsTo
     {
         return $this->belongsTo(Card::class);

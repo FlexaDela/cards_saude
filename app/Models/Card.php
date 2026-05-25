@@ -6,7 +6,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Override;
@@ -44,5 +43,10 @@ class Card extends Model
     public function cardImages(): HasMany
     {
         return $this->hasMany(CardImage::class);
+    }
+
+    public function coverImage(): HasMany
+    {
+        return $this->hasMany(CardImage::class)->where('principal', true)->limit(1);
     }
 }

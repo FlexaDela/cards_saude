@@ -26,9 +26,14 @@
                             <x-input-error class="mt-2" :messages="$errors->get('description')" />
                         </div>
 
-                        <div class="flex items-center gap-4">
-                            <x-primary-button>{{ __('Salvar Categoria') }}</x-primary-button>
-                        </div>
+                        <div class="flex flex-col-reverse sm:flex-row items-center justify-between gap-4 mt-6">
+                        <a href="{{ route('cards.index') }}" class="w-full sm:w-auto inline-flex justify-center items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150">
+                            {{ __('Cancelar e Voltar') }}
+                        </a>
+                        <x-primary-button>
+                            {{ __('Salvar Categoria') }}
+                        </x-primary-button>
+                    </div>
                     </form>
                 </div>
             </div>

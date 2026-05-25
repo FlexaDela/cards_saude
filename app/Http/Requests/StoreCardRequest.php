@@ -23,13 +23,55 @@ class StoreCardRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:100', 'regex:/^[\pL\pN]+(?:\s[\pL\pN]+)*$/u'],
-            'description' => ['nullable', 'string'],
-            'categories' => ['required', 'array'],
-            'categories.*' => ['exists:categories,id'],
-            'available' => ['sometimes', 'boolean'],
-            'show' => ['sometimes', 'boolean'],
-            'price' => ['required', 'numeric', 'min:0'],
+            'name' => [
+                    'required',
+                    'unique:App\Models\Card,name',
+                    'string',
+                    'max:100',
+                    'regex:/^[\pL\pN]+(?:\s[\pL\pN]+)*$/u'
+                ],
+
+            'images' => [
+                    'nullable',
+                    'array',
+                    'max:5'
+                ],
+
+            'images.*' => [
+                    'image',
+                    'extensions:jpg,png,jpeg',
+                    'max:2048'
+                ],
+
+            'description' => [
+                    'nullable',
+                    'string'
+                ],
+
+            'categories' => [
+                    'required',
+                    'array'
+                ],
+
+            'categories.*' => [
+                    'exists:categories,id'
+                ],
+
+            'available' => [
+                    'sometimes',
+                    'boolean'
+                ],
+
+            'show' => [
+                    'sometimes',
+                    'boolean'
+                ],
+
+            'price' => [
+                    'required',
+                    'numeric',
+                    'min:0'
+                ],
         ];
     }
 }

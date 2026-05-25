@@ -23,8 +23,19 @@ class StoreCategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:100', 'regex:/^[\pL\pN]+(?:\s[\pL\pN]+)*$/u'],
-            'description' => ['sometimes', 'nullable', 'string']
+            'name' => [
+                    'required',
+                    'unique:App\Models\Category,name',
+                    'string',
+                    'max:100',
+                    'regex:/^[\pL\pN]+(?:\s[\pL\pN]+)*$/u'
+                ],
+
+            'description' => [
+                    'sometimes',
+                    'nullable',
+                    'string'
+                ]
         ];
     }
 }

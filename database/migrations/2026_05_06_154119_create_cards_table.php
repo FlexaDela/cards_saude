@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('cards', function (Blueprint $table) {
             $table->id();
-            $table->string('name', length:100);
+            $table->string('name', length:100)->unique();
             $table->text('description')->nullable();
             $table->boolean('available')->default(false);
             $table->boolean('show')->default(false);
