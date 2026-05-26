@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Override;
 
 class Card extends Model
@@ -45,8 +46,8 @@ class Card extends Model
         return $this->hasMany(CardImage::class);
     }
 
-    public function coverImage(): HasMany
+    public function coverImage(): HasOne
     {
-        return $this->hasMany(CardImage::class)->where('principal', true)->limit(1);
+        return $this->hasOne(CardImage::class)->where('principal', true)->limit(1);
     }
 }

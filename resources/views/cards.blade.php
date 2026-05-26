@@ -15,9 +15,15 @@
                     @forelse($cards as $card)
                         <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between">
                             <div>
-                                <div class="w-full h-32 bg-gray-100 rounded-xl mb-4 flex items-center justify-center text-gray-400 font-bold uppercase tracking-tighter">
-                                    Imagem
-                                </div>
+                                @if ($card->coverImage)
+                                    <div class="w-full h-32 bg-gray-100 rounded-xl mb-4 flex items-center justify-center overflow-hidden shadow-sm border border-gray-100">
+                                        <img src="{{ asset('storage/' . $card->coverImage->path) }}" alt="Capa: {{ $card->name }}" class="w-full h-full object-cover">
+                                    </div>
+                                @else
+                                    <div class="w-full h-32 bg-gray-50 border border-dashed border-gray-200 rounded-xl mb-4 flex items-center justify-center text-gray-400 font-bold uppercase tracking-tighter text-xs shadow-sm">
+                                        Sem Imagem
+                                    </div>
+                                @endif
                                 <h4 class="font-bold text-lg text-gray-800">{{ $card->name }}</h4>
 
                                 <!-- Loop de Categorias do Card -->
