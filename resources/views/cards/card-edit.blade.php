@@ -54,9 +54,9 @@
                         <div class="mb-6 bg-gray-50 p-4 rounded-xl border border-gray-200">
                             <p class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-3">Imagens Atuais Cadastradas</p>
 
-                            @if($card->images->count() > 0)
+                            @if($card->cardImages->count() > 0)
                                 <div class="flex flex-wrap gap-4">
-                                    @foreach($card->images as $image)
+                                    @foreach($card->cardImages as $image)
                                         <div class="relative w-24 h-24 rounded-lg overflow-hidden border-2 {{ $image->is_cover ? 'border-indigo-500 shadow-md' : 'border-transparent shadow-sm' }}">
                                             <img src="{{ asset('storage/' . $image->path) }}" class="w-full h-full object-cover hover:scale-110 transition duration-300" alt="Imagem do card">
 

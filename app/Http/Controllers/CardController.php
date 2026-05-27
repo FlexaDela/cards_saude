@@ -97,6 +97,7 @@ class CardController extends Controller
 
     public function destroy(Card $card): RedirectResponse
     {
+        
         $card->delete();
 
         return to_route('cards.index');
