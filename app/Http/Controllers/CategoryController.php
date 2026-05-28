@@ -52,8 +52,12 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category): RedirectResponse
     {
+        if($category->card()->exist()){
+            return back('cards.index')->with('message.error','Esta categoria ainda possue cards dentro dela');
+        }
+
         $category->delete();
 
-        return to_route('cards.index');
+        return to_route('cards.index')->with('message.success',"Categoria: '$category->name' deletada com sucesso");
     }
 }
