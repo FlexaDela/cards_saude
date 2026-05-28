@@ -12,6 +12,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\DB;
 
 class CardController extends Controller
 {
@@ -98,15 +99,18 @@ class CardController extends Controller
     public function destroy(Card $card): RedirectResponse
     {
         if($card->show === false){
-            //Deleta o diretorio do card informado
-            Storage::disk('public')->deleteDirectory('cards/' . Str::slug($card->name));
 
-            //deletar card
-            $card->delete();
+            DB::transaction(function () use ($card) {
+                //Deleta o diretorio do card informado
+                Storage::disk('public')->deleteDirectory('cards/' . Str::slug($card->name));
+
+                //deletar card
+                $card->delete();
+            });
 
             return to_route('cards.index')->with('message.success','Card deletado com sucesso');
         }
 
-        return to_route('cards.edit', $card->id)->with('message.error','Este card está amostra na vitrine!');
+        return back('cards.edit', $card->id)->with('message.error','Este card está amostra na vitrine!');
     }
 }
