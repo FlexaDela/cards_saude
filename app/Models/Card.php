@@ -22,6 +22,7 @@ class Card extends Model
     public function casts(): array
     {
         return [
+            'show' => 'boolean',
             'available' => 'boolean',
             'pice' => 'decimal:2',
             'created_at' => 'datetime:d-m-Y'

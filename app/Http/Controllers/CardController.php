@@ -5,11 +5,12 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreCardRequest;
 use App\Http\Requests\UpdateCardRequest;
 use App\Models\Card;
-use App\Models\CardImage;
+use Illuminate\Support\Str;
 use App\Models\Category;
 use App\Traits\ImageUploadTrait;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class CardController extends Controller
@@ -94,12 +95,18 @@ class CardController extends Controller
         return to_route('cards.edit', $card->id);
     }
 
-
     public function destroy(Card $card): RedirectResponse
     {
-        
-        $card->delete();
+        if($card->show === false){
+            //Deleta o diretorio do card informado
+            Storage::disk('public')->deleteDirectory('cards/' . Str::slug($card->name));
 
-        return to_route('cards.index');
+            //deletar card
+            $card->delete();
+
+            return to_route('cards.index')->with('message.success','Card deletado com sucesso');
+        }
+
+        return to_route('cards.edit', $card->id)->with('message.error','Este card está amostra na vitrine!');
     }
 }
