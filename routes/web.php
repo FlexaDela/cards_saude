@@ -19,7 +19,8 @@ Route::middleware(['auth', 'verified'])->group(function(){
         });
 
         Route::resource('cards', CardController::class);
-
+        Route::delete('{card}/image/{cardImage}',[CardController::class, 'destroyImage'])->name('cards.destroyImage');
+        Route::patch('{card}/image/{cardImage}',[CardController::class, 'makeCoverImage'])->name('cards.makeCoverImage');
     });
 });
 

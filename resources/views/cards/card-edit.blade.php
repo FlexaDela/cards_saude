@@ -9,7 +9,6 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
 
             <div class="bg-white shadow-sm sm:rounded-lg p-4 sm:p-6 border border-gray-100">
-
                 <form method="POST" action="{{ route('cards.update', $card->id) }}" enctype="multipart/form-data">
                     @csrf
                     @method('PATCH')
@@ -49,38 +48,13 @@
                     </div>
 
                     <div class="mt-8 border-t border-gray-100 pt-6">
-                        <h3 class="text-lg font-bold text-gray-800 mb-4">{{ __('Galeria de Imagens') }}</h3>
-
-                        <div class="mb-6 bg-gray-50 p-4 rounded-xl border border-gray-200">
-                            <p class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-3">Imagens Atuais Cadastradas</p>
-
-                            @if($card->cardImages->count() > 0)
-                                <div class="flex flex-wrap gap-4">
-                                    @foreach($card->cardImages as $image)
-                                        <div class="relative w-24 h-24 rounded-lg overflow-hidden border-2 {{ $image->is_cover ? 'border-indigo-500 shadow-md' : 'border-transparent shadow-sm' }}">
-                                            <img src="{{ asset('storage/' . $image->path) }}" class="w-full h-full object-cover hover:scale-110 transition duration-300" alt="Imagem do card">
-
-                                            @if($image->is_cover)
-                                                <div class="absolute bottom-0 left-0 right-0 bg-indigo-600 text-white text-[9px] text-center font-bold py-1 uppercase tracking-widest">
-                                                    Capa
-                                                </div>
-                                            @endif
-                                        </div>
-                                    @endforeach
-                                </div>
-                            @else
-                                <p class="text-sm text-gray-500 italic">Este card ainda não possui imagens.</p>
-                            @endif
-                        </div>
-
-                        <div>
-                            <x-input-label for="images" :value="__('Adicionar Novas Imagens')" />
-                            <input id="images" name="images[]" type="file" multiple accept="image/*"
-                                   class="block mt-1 w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer" />
-                            <p class="text-xs text-gray-500 mt-1 italic">Ao enviar novas imagens, elas serão adicionadas à galeria deste card.</p>
-                            <x-input-error :messages="$errors->get('images')" class="mt-2" />
-                            <x-input-error :messages="$errors->get('images.*')" class="mt-2" />
-                        </div>
+                        <h3 class="text-lg font-bold text-gray-800 mb-4">{{ __('Adicionar Novas Imagens') }}</h3>
+                        <x-input-label for="images" :value="__('Selecione arquivos do seu dispositivo')" />
+                        <input id="images" name="images[]" type="file" multiple accept="image/*"
+                               class="block mt-1 w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer" />
+                        <p class="text-xs text-gray-500 mt-1 italic">Ao salvar as alterações, essas imagens serão acrescentadas à galeria do card.</p>
+                        <x-input-error :messages="$errors->get('images')" class="mt-2" />
+                        <x-input-error :messages="$errors->get('images.*')" class="mt-2" />
                     </div>
 
                     <div class="flex flex-col sm:flex-row gap-4 sm:gap-6 mb-6 mt-8">
@@ -97,7 +71,7 @@
 
                     <div class="flex flex-col-reverse sm:flex-row items-center justify-between gap-4 mt-8 pt-6 border-t border-gray-100">
                         <a href="{{ route('cards.index') }}" class="w-full sm:w-auto inline-flex justify-center items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                            {{ __('Cancelar') }}
+                            {{ __('Cancelar e Voltar') }}
                         </a>
 
                         <x-primary-button class="w-full sm:w-auto justify-center">
@@ -105,6 +79,45 @@
                         </x-primary-button>
                     </div>
                 </form>
+            </div>
+
+            <div class="bg-white shadow-sm sm:rounded-lg p-4 sm:p-6 border border-gray-100">
+                <h3 class="text-lg font-bold text-gray-800 mb-4">{{ __('Gerenciar Imagens Atuais') }}</h3>
+                <p class="text-xs text-gray-500 mb-4">Atenção: A exclusão de imagens aqui acontece imediatamente, independente do botão de salvar acima.</p>
+
+                <div class="bg-gray-50 p-4 rounded-xl border border-gray-200">
+                    @if($card->cardImages->count() > 0)
+                        <div class="flex flex-wrap gap-4">
+                            @foreach($card->cardImages as $image)
+                                <div class="relative w-32 h-40 bg-white rounded-lg overflow-hidden border border-gray-200 shadow-sm flex flex-col">
+
+                                    <div class="h-28 w-full relative bg-gray-100">
+                                        <img src="{{ asset('storage/' . $image->path) }}" class="w-full h-full object-cover" alt="Imagem do card">
+
+                                        @if($image->is_cover)
+                                            <div class="absolute top-0 left-0 w-full bg-indigo-600 text-white text-[10px] text-center font-bold py-1 uppercase tracking-widest">
+                                                Capa
+                                            </div>
+                                        @endif
+                                    </div>
+
+                                    <div class="flex-1 flex items-center justify-center p-0 bg-red-50 border-t border-red-100 hover:bg-red-100 transition">
+                                        <form action="{{ route('cards.destroyImage', ['card' => $card->id, 'cardImage' => $image->id]) }}" method="POST" class="w-full h-full m-0" onsubmit="return confirm('Tem certeza que deseja apagar esta foto em definitivo?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="w-full h-full text-[10px] font-bold text-red-600 uppercase flex items-center justify-center gap-1 py-2">
+                                                Excluir
+                                            </button>
+                                        </form>
+                                    </div>
+
+                                </div>
+                            @endforeach
+                        </div>
+                    @else
+                        <p class="text-sm text-gray-500 italic text-center py-2">Este card ainda não possui imagens na galeria.</p>
+                    @endif
+                </div>
             </div>
 
             <div class="bg-red-50 shadow-sm sm:rounded-lg p-4 sm:p-6 border border-red-100 flex flex-col sm:flex-row items-center justify-between gap-4">

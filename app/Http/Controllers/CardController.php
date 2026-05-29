@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreCardRequest;
 use App\Http\Requests\UpdateCardRequest;
 use App\Models\Card;
+use App\Models\CardImage;
 use Illuminate\Support\Str;
 use App\Models\Category;
 use App\Traits\ImageUploadTrait;
@@ -101,10 +102,9 @@ class CardController extends Controller
         if($card->show === false){
 
             DB::transaction(function () use ($card) {
-                //Deleta o diretorio do card informado
+
                 Storage::disk('public')->deleteDirectory('cards/' . Str::slug($card->name));
 
-                //deletar card
                 $card->delete();
             });
 
@@ -112,5 +112,26 @@ class CardController extends Controller
         }
 
         return back('cards.edit', $card->id)->with('message.error','Este card está amostra na vitrine!');
+    }
+
+    public function destroyImage(Card $card ,CardImage $cardImage): RedirectResponse
+    {
+        if($cardImage->principal === false){
+
+            DB::transaction(function()use($cardImage){
+
+            Storage::disk('public')->delete($cardImage->path);
+            $cardImage->delete();
+
+            });
+
+            return back()->with('message.success','Imagem deletada com sucesso');
+        }
+        return back()->with('message.error','Erro ao deletar sua imagem');
+    }
+
+    public function makeCoverImage(Card $card, CardImage $cardImage): RedirectResponse
+    {
+        return back();
     }
 }
