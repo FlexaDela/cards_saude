@@ -11,15 +11,19 @@ use Illuminate\View\View;
 
 class CategoryController extends Controller
 {
+    public function index(Request $request): View
+    {
+        $messageSuccess = $request->session()->get('message.success');
+        $messageError = $request->session()->get('message.error');
+        $categories = Category::all();
+
+        return view('cards.category-index', compact('categories','messageSuccess','messageError'));
+    }
     public function create(Request $request): View
     {
-
         return view('cards.category-create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreCategoryRequest $request): RedirectResponse
     {
 
@@ -28,18 +32,11 @@ class CategoryController extends Controller
         return to_route('cards.index');
     }
 
-
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Category $category, Request $request): View
     {
         return view('cards.category-edit')->with('category',$category);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdateCategoryRequest $request, Category $category): RedirectResponse
     {
         $category->update($request->validated());
@@ -47,13 +44,10 @@ class CategoryController extends Controller
         return to_route('cards.index');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Category $category): RedirectResponse
     {
-        if($category->card()->exist()){
-            return back('cards.index')->with('message.error','Esta categoria ainda possue cards dentro dela');
+        if($category->cards()->exists()){
+            return back()->with('message.error','Esta categoria ainda possue cards dentro dela');
         }
 
         $category->delete();

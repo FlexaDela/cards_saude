@@ -4,7 +4,7 @@
 
             <!-- Topo: Botões de Criar -->
             <div class="flex gap-4 mb-8">
-                <a href="{{ route('categories.create') }}" class="bg-gray-800 text-white px-6 py-3 rounded-lg font-bold uppercase text-xs tracking-widest hover:bg-gray-700 transition">Criar Categoria</a>
+                <a href="{{ route('categories.index') }}" class="bg-gray-800 text-white px-6 py-3 rounded-lg font-bold uppercase text-xs tracking-widest hover:bg-gray-700 transition">Categorias</a>
                 <a href="{{ route('cards.create') }}" class="bg-indigo-600 text-white px-6 py-3 rounded-lg font-bold uppercase text-xs tracking-widest hover:bg-indigo-700 transition">Criar Card</a>
             </div>
 

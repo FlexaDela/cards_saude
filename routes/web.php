@@ -15,7 +15,7 @@ Route::middleware(['auth', 'verified'])->group(function(){
         })->name('admin-painel.dashboard');
 
         Route::prefix('cards')->group(function(){
-            Route::resource('categories', CategoryController::class)->except('show','index');
+            Route::resource('categories', CategoryController::class)->except('show');
         });
 
         Route::resource('cards', CardController::class);

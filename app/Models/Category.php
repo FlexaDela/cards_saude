@@ -20,7 +20,7 @@ class Category extends Model
 
     public function cards(): BelongsToMany
     {
-        return $this->BelongsToMany(Card::class, 'category_card');
+        return $this->belongsToMany(Card::class, 'category_card');
     }
 
 }

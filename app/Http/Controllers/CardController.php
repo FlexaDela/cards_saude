@@ -111,7 +111,7 @@ class CardController extends Controller
             return to_route('cards.index')->with('message.success','Card deletado com sucesso');
         }
 
-        return back('cards.edit', $card->id)->with('message.error','Este card está amostra na vitrine!');
+        return back()->with('message.error','Este card está amostra na vitrine!');
     }
 
     public function destroyImage(Card $card ,CardImage $cardImage): RedirectResponse
