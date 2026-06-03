@@ -115,7 +115,7 @@
                                     </div>
 
                                     <div class="flex-1 flex items-center justify-center p-0 bg-red-50 border-t border-red-100 hover:bg-red-100 transition">
-                                        <form action="{{ route('cards.destroyImage', ['card' => $card->id, 'cardImage' => $image->id]) }}" method="POST" class="w-full h-full m-0" onsubmit="return confirm('Tem certeza que deseja apagar esta foto em definitivo?')">
+                                        <form action="{{ route('cards.destroyImage', ['cardImage' => $image->id]) }}" method="POST" class="w-full h-full m-0" onsubmit="return confirm('Tem certeza que deseja apagar esta foto em definitivo?')">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="w-full h-full text-[10px] font-bold text-red-600 uppercase flex items-center justify-center gap-1 py-2">

@@ -73,7 +73,7 @@ class CardController extends Controller
         }
 
         $request->session()->flash('message.success','Card criado com sucesso!');
-        
+
         return to_route('cards.index');
     }
 
@@ -96,12 +96,25 @@ class CardController extends Controller
 
     public function update(UpdateCardRequest $request, Card $card): RedirectResponse
     {
-        $card->update($request->validated());
 
-        $card->categories()->sync($request->categories);
+        DB::transaction(function() use($card, $request) {
+
+            $card->update($request->validated());
+            $card->categories()->sync($request->categories);
+
+            $imagesPaths = $this->imageUpload($request);
+
+            foreach($imagesPaths as $path){
+                $card->cardImages()->create([
+                    'path' => $path,
+                    'principal' => false,
+                ]);
+            }
+        });
+
         $request->session()->flash('message.success','Card atualizado com sucesso');
 
-        return to_route('cards.edit', $card->id);
+        return back();
     }
 
     public function destroy(Card $card, Request $request): RedirectResponse
@@ -129,17 +142,20 @@ class CardController extends Controller
     {
         if($cardImage->principal === 0){
 
-            DB::transaction(function()use($cardImage){
+            DB::transaction(function() use($cardImage) {
 
             Storage::disk('public')->delete($cardImage->path);
             $cardImage->delete();
 
             });
+
             $request->session()->flash('message.success','Imagem deletada com sucesso');
+
             return back();
         }
 
-        $request->session()->flash('message.error','Erro ao deletar sua imagem');
+        $request->session()->flash('message.error','Esta imagem é principal');
+
         return back();
     }
 
