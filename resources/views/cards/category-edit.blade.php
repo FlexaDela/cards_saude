@@ -7,6 +7,19 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+             @if ($messageSuccess)
+                <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded-md shadow-sm flex items-center mb-6">
+                    <svg class="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    <p class="text-sm text-green-700 font-medium">{{ $messageSuccess }}</p>
+                </div>
+            @endif
+
+            @if ($messageError)
+                <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-md shadow-sm flex items-center mb-6">
+                    <svg class="w-5 h-5 text-red-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <p class="text-sm text-red-700 font-medium">{{ $messageError }}</p>
+                </div>
+            @endif
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
 
@@ -35,16 +48,6 @@
                                 {{ __('Atualizar Categoria') }}
                             </x-primary-button>
                     </form>
-
-                    {{-- FORMULÁRIO DE DELETAR (Separado por segurança) --}}
-                    <form method="POST" action="{{ route('categories.destroy', $category->id) }}" onsubmit="return confirm('ATENÇÃO: Deletar esta categoria apagará TODOS os cards vinculados a ela. Confirmar exclusão?')">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="w-full sm:w-auto inline-flex justify-center items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-500 active:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                            {{ __('Excluir Categoria') }}
-                        </button>
-                    </form>
-                    </div>
 
                     {{-- Botão Voltar --}}
                     <div class="mt-8">

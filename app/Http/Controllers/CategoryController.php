@@ -28,30 +28,37 @@ class CategoryController extends Controller
     {
 
         Category::create($request->validated());
+        $request->session()->flash('message.success','Categoria criada com sucesso');
 
-        return to_route('cards.index');
+        return to_route('categories.index');
     }
 
     public function edit(Category $category, Request $request): View
     {
-        return view('cards.category-edit')->with('category',$category);
+        $messageSuccess = $request->session()->get('message.success');
+        $messageError = $request->session()->get('message.error');
+
+        return view('cards.category-edit',compact('messageSuccess','messageError','category'));
     }
 
     public function update(UpdateCategoryRequest $request, Category $category): RedirectResponse
     {
         $category->update($request->validated());
+        $request->session()->flash('message.success','Alterações feitas com sucesso');
 
-        return to_route('cards.index');
+        return back();
     }
 
-    public function destroy(Category $category): RedirectResponse
+    public function destroy(Category $category, Request $request): RedirectResponse
     {
         if($category->cards()->exists()){
-            return back()->with('message.error','Esta categoria ainda possue cards dentro dela');
+            $request->session()->flash('message.error','Esta categoria ainda possue cards dentro dela');
+            return back();
         }
 
         $category->delete();
+        $request->session()->flash('message.success',"Categoria: '$category->name' deletada com sucesso");
 
-        return to_route('cards.index')->with('message.success',"Categoria: '$category->name' deletada com sucesso");
+        return back();
     }
 }
