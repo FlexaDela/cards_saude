@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Override;
 
 class StoreCardRequest extends FormRequest
 {
@@ -13,6 +14,16 @@ class StoreCardRequest extends FormRequest
     public function authorize(): bool
     {
         return true;
+    }
+
+    // Função que define valores por padrão antes da validação
+    #[Override]
+    protected function prepareForValidation()
+    {
+         $this->merge([
+            'available' => $this->boolean('available'),
+            'show' => $this->boolean('show')
+        ]);
     }
 
     /**
@@ -58,12 +69,10 @@ class StoreCardRequest extends FormRequest
                 ],
 
             'available' => [
-                    'sometimes',
                     'boolean'
                 ],
 
             'show' => [
-                    'sometimes',
                     'boolean'
                 ],
 

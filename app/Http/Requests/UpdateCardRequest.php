@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Override;
 
 class UpdateCardRequest extends FormRequest
 {
@@ -15,6 +16,16 @@ class UpdateCardRequest extends FormRequest
         return true;
     }
 
+    // Função que define valores por padrão antes da validação 
+    #[Override]
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'available' => $this->boolean('available'),
+            'show' => $this->boolean('show')
+        ]);
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -24,7 +35,7 @@ class UpdateCardRequest extends FormRequest
     {
         return [
             'name' => [
-                    //'required',
+                    'sometimes',
                     //'unique:App\Models\Card,name',
                     'string',
                     'max:100',
@@ -58,12 +69,10 @@ class UpdateCardRequest extends FormRequest
                 ],
 
             'available' => [
-                    'sometimes',
                     'boolean'
                 ],
 
             'show' => [
-                    'sometimes',
                     'boolean'
                 ],
 

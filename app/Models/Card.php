@@ -24,7 +24,7 @@ class Card extends Model
         return [
             'show' => 'boolean',
             'available' => 'boolean',
-            'pice' => 'decimal:2',
+            'price' => 'decimal:2',
             'created_at' => 'datetime:d-m-Y'
         ];
     }

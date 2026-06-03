@@ -70,15 +70,15 @@
                         <x-input-error :messages="$errors->get('images.*')" class="mt-2" />
                     </div>
 
-                    <div class="flex flex-col sm:flex-row gap-4 sm:gap-6 mb-6 mt-8">
+                    <div class="mt-4 flex flex-col sm:flex-row gap-4 sm:gap-6">
                         <label class="inline-flex items-center cursor-pointer">
-                            <input type="checkbox" name="available" value="1" {{ old('available', $card->available) ? 'checked' : '' }} class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500 w-5 h-5">
-                            <span class="ms-2 text-sm text-gray-600 font-medium">{{ __('Disponível para venda') }}</span>
+                            <input type="checkbox" name="available" value="1" @checked(old('available', $card->available)) class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500 w-5 h-5">
+                            <span class="ms-2 text-sm text-gray-600 font-medium">{{ __('Disponível') }}</span>
                         </label>
 
                         <label class="inline-flex items-center cursor-pointer">
-                            <input type="checkbox" name="show" value="1" {{ old('show', $card->show) ? 'checked' : '' }} class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500 w-5 h-5">
-                            <span class="ms-2 text-sm text-gray-600 font-medium">{{ __('Mostrar na vitrine pública') }}</span>
+                            <input type="checkbox" name="show" value="1" @checked(old('show', $card->show)) class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500 w-5 h-5">
+                            <span class="ms-2 text-sm text-gray-600 font-medium">{{ __('Mostrar na vitrine') }}</span>
                         </label>
                     </div>
 
