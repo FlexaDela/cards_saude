@@ -22,6 +22,7 @@ class CardController extends Controller
 
     public function index(Request $request): View
     {
+        $messageSuccess = $request->session()->get('message.success');
 
         $query = Card::with(['categories','coverImage']);
 
@@ -45,7 +46,7 @@ class CardController extends Controller
         $cards = $query->get();
         $categories = Category::all();
 
-        return view('cards', compact('cards', 'categories'));
+        return view('cards', compact('cards', 'categories','messageSuccess'));
 
     }
 
@@ -71,7 +72,9 @@ class CardController extends Controller
             ]);
         }
 
-        return to_route('cards.index')->with('sucess', 'Card criado com sucesso');
+        $request->session()->flash('message.success','Card criado com sucesso!');
+        
+        return to_route('cards.index');
     }
 
 
@@ -81,10 +84,13 @@ class CardController extends Controller
     }
 
 
-    public function edit(Card $card): View
+    public function edit(Card $card, Request $request): View
     {
         $categories = Category::all();
-        return view('cards.card-edit', compact('categories','card'));
+        $messageSuccess = $request->session()->get('message.success');
+        $messageError = $request->session()->get('message.error');
+
+        return view('cards.card-edit', compact('categories','card','messageSuccess','messageError'));
     }
 
 
@@ -93,11 +99,12 @@ class CardController extends Controller
         $card->update($request->validated());
 
         $card->categories()->sync($request->categories);
+        $request->session()->flash('message.success','Card atualizado com sucesso');
 
         return to_route('cards.edit', $card->id);
     }
 
-    public function destroy(Card $card): RedirectResponse
+    public function destroy(Card $card, Request $request): RedirectResponse
     {
         if($card->show === false){
 
@@ -108,15 +115,19 @@ class CardController extends Controller
                 $card->delete();
             });
 
-            return to_route('cards.index')->with('message.success','Card deletado com sucesso');
+            $request->session()->flash('message.success','Card deletado com sucesso');
+
+            return to_route('cards.index', compact('messageSuccess'));
         }
 
-        return back()->with('message.error','Este card está amostra na vitrine!');
+        $request->session()->flash('message.error','Este card está na vitrine!');
+
+        return back();
     }
 
-    public function destroyImage(Card $card ,CardImage $cardImage): RedirectResponse
+    public function destroyImage(Request $request ,CardImage $cardImage): RedirectResponse
     {
-        if($cardImage->principal === false){
+        if($cardImage->principal === 0){
 
             DB::transaction(function()use($cardImage){
 
@@ -124,10 +135,12 @@ class CardController extends Controller
             $cardImage->delete();
 
             });
-
-            return back()->with('message.success','Imagem deletada com sucesso');
+            $request->session()->flash('message.success','Imagem deletada com sucesso');
+            return back();
         }
-        return back()->with('message.error','Erro ao deletar sua imagem');
+
+        $request->session()->flash('message.error','Erro ao deletar sua imagem');
+        return back();
     }
 
     public function makeCoverImage(Card $card, CardImage $cardImage): RedirectResponse

@@ -7,6 +7,19 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+            @if ($messageSuccess)
+                <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded-md shadow-sm flex items-center mb-6">
+                    <svg class="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    <p class="text-sm text-green-700 font-medium">{{ $messageSuccess }}</p>
+                </div>
+            @endif
+
+            @if ($messageError)
+                <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-md shadow-sm flex items-center mb-6">
+                    <svg class="w-5 h-5 text-red-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <p class="text-sm text-red-700 font-medium">{{ $messageError }}</p>
+                </div>
+            @endif
 
             <div class="bg-white shadow-sm sm:rounded-lg p-4 sm:p-6 border border-gray-100">
                 <form method="POST" action="{{ route('cards.update', $card->id) }}" enctype="multipart/form-data">
@@ -59,12 +72,12 @@
 
                     <div class="flex flex-col sm:flex-row gap-4 sm:gap-6 mb-6 mt-8">
                         <label class="inline-flex items-center cursor-pointer">
-                            <input type="checkbox" name="available" value="{{ $card->available }}" {{ old('available', $card->available) ? 'checked' : '' }} class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500 w-5 h-5">
+                            <input type="checkbox" name="available" value="1" {{ old('available', $card->available) ? 'checked' : '' }} class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500 w-5 h-5">
                             <span class="ms-2 text-sm text-gray-600 font-medium">{{ __('Disponível para venda') }}</span>
                         </label>
 
                         <label class="inline-flex items-center cursor-pointer">
-                            <input type="checkbox" name="show" value="{{ $card->show }}" {{ old('show', $card->show) ? 'checked' : '' }} class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500 w-5 h-5">
+                            <input type="checkbox" name="show" value="1" {{ old('show', $card->show) ? 'checked' : '' }} class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500 w-5 h-5">
                             <span class="ms-2 text-sm text-gray-600 font-medium">{{ __('Mostrar na vitrine pública') }}</span>
                         </label>
                     </div>

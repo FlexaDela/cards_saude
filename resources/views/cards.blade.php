@@ -9,7 +9,12 @@
             </div>
 
             <div class="flex flex-col md:flex-row gap-8">
-
+                @if ($messageSuccess)
+                    <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded-md shadow-sm flex items-center mb-6">
+                        <svg class="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        <p class="text-sm text-green-700 font-medium">{{ $messageSuccess }}</p>
+                    </div>
+                @endif
                 <!-- Esquerda: Grid de Cards (Lista Geral) -->
                 <div class="flex-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     @forelse($cards as $card)
