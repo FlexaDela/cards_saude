@@ -14,6 +14,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class CardController extends Controller
 {
@@ -60,21 +62,35 @@ class CardController extends Controller
 
     public function store(StoreCardRequest $request): RedirectResponse
     {
-        $card = Card::create($request->validated());
-        $card->categories()->sync($request->categories);
+        try{
 
-        $imagesPaths = $this->imageUpload($request);
+            DB::transaction(function() use($request) {
 
-        foreach($imagesPaths as $key => $path){
-            $card->cardImages()->create([
-                'path'=> $path,
-                'principal' => ($key === 0)
-            ]);
+                $card = Card::create($request->validated());
+                $card->categories()->sync($request->categories);
+
+                $imagesPaths = $this->imageUpload($request);
+
+                foreach($imagesPaths as $key => $path){
+                    $card->cardImages()->create([
+                        'path'=> $path,
+                        'principal' => ($key === 0)
+                    ]);
+                }
+            });
+
+            $request->session()->flash('message.success','Card criado com sucesso!');
+
+            return to_route('cards.index');
+
+        } catch(Throwable $e) {
+
+            Log::error('Erro ao criar o card:' . $e->getMessage());
+
+            $request->session()->flash('message.error','Erro ao criar o card');
+
+            return back();
         }
-
-        $request->session()->flash('message.success','Card criado com sucesso!');
-
-        return to_route('cards.index');
     }
 
 
@@ -130,7 +146,7 @@ class CardController extends Controller
 
             $request->session()->flash('message.success','Card deletado com sucesso');
 
-            return to_route('cards.index', compact('messageSuccess'));
+            return to_route('cards.index');
         }
 
         $request->session()->flash('message.error','Este card está na vitrine!');
