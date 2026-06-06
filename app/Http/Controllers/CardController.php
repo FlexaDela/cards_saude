@@ -62,36 +62,43 @@ class CardController extends Controller
 
     public function store(StoreCardRequest $request): RedirectResponse
     {
-        try{
+        $imagesPaths = [];
 
-            DB::transaction(function() use($request) {
+        try
+        {
+            DB::beginTransaction();
 
-                $card = Card::create($request->validated());
-                $card->categories()->sync($request->categories);
+            $card = Card::create($request->validated());
+            $card->categories()->sync($request->categories);
 
-                $imagesPaths = $this->imageUpload($request);
+            $imagesPaths = $this->imageUpload($request);
 
-                foreach($imagesPaths as $key => $path){
-                    $card->cardImages()->create([
-                        'path'=> $path,
-                        'principal' => ($key === 0)
-                    ]);
-                }
-            });
+            foreach($imagesPaths as $key => $path){
+                $card->cardImages()->create([
+                    'path'=> $path,
+                    'principal' => ($key === 0)
+                ]);
+            }
 
-            $request->session()->flash('message.success','Card criado com sucesso!');
+            DB::commit();
 
+            $request->session()->flash('message.success', 'Card criado com sucesso!');
             return to_route('cards.index');
 
-        } catch(Throwable $e) {
+        } catch(\Throwable $e) {
+            DB::rollBack();
+
+            if (!empty($imagesPaths)) {
+                Storage::disk('public')->delete($imagesPaths); //o proprio laravel percorre o array
+            }
 
             Log::error('Erro ao criar o card:' . $e->getMessage());
-
-            $request->session()->flash('message.error','Erro ao criar o card');
+            $request->session()->flash('message.error', 'Erro ao criar o card');
 
             return back();
         }
     }
+
 
 
     public function show(Card $card): View
@@ -112,8 +119,11 @@ class CardController extends Controller
 
     public function update(UpdateCardRequest $request, Card $card): RedirectResponse
     {
+        $imagesPaths = [];
 
-        DB::transaction(function() use($card, $request) {
+        try
+        {
+            DB::beginTransaction();
 
             $card->update($request->validated());
             $card->categories()->sync($request->categories);
@@ -126,27 +136,48 @@ class CardController extends Controller
                     'principal' => false,
                 ]);
             }
-        });
 
-        $request->session()->flash('message.success','Card atualizado com sucesso');
+            DB::commit();
 
-        return back();
+            $request->session()->flash('message.success','Card atualizado com sucesso');
+
+            return back();
+
+        } catch (Throwable $e)
+        {
+            DB::rollBack();
+
+            if (!empty($imagesPaths)) {
+                Storage::disk('public')->delete($imagesPaths);
+            }
+
+            Log::error('Erro ao criar o card:' . $e->getMessage());
+            $request->session()->flash('message.error', 'Erro ao atualizar o card');
+
+            return back();
+        }
     }
 
     public function destroy(Card $card, Request $request): RedirectResponse
     {
         if($card->show === false){
-
-            DB::transaction(function () use ($card) {
+            try
+            {
+                $card->delete();
 
                 Storage::disk('public')->deleteDirectory('cards/' . Str::slug($card->name));
 
-                $card->delete();
-            });
+                $request->session()->flash('message.success','Card deletado com sucesso');
 
-            $request->session()->flash('message.success','Card deletado com sucesso');
+                return to_route('cards.index');
+            } catch(Throwable $e)
+            {
 
-            return to_route('cards.index');
+                Log::error("Erro ao deletar o card 'nome - $card->name, id $card->id'". $e->getMessage());
+                $request->session()->flash('message.error','Erro ao deletar seu card!');
+
+                return back();
+            }
         }
 
         $request->session()->flash('message.error','Este card está na vitrine!');
@@ -156,18 +187,23 @@ class CardController extends Controller
 
     public function destroyImage(Request $request ,CardImage $cardImage): RedirectResponse
     {
-        if($cardImage->principal === 0){
+        if($cardImage->principal === false){
+            try
+            {
+                $cardImage->delete();
 
-            DB::transaction(function() use($cardImage) {
+                Storage::disk('public')->delete($cardImage->path);
 
-            Storage::disk('public')->delete($cardImage->path);
-            $cardImage->delete();
+                $request->session()->flash('message.success','Imagem deletada com sucesso');
 
-            });
+                return back();
+            } catch(Throwable $e)
+            {
+                Log::error("Erro ao deletar a imagem do caminho '$cardImage->path': ". $e->getMessage());
+                $request->session()->flash('message.error','Erro ao deletar Esta imagem!');
 
-            $request->session()->flash('message.success','Imagem deletada com sucesso');
-
-            return back();
+                return back();
+            }
         }
 
         $request->session()->flash('message.error','Esta imagem é principal');
