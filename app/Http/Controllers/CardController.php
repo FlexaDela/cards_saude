@@ -53,10 +53,11 @@ class CardController extends Controller
     }
 
 
-    public function create(): View
+    public function create(Request $request): View
     {
+        $messageError = $request->session()->get('message.error');
         $categories = Category::all();
-        return view('cards.card-create')->with('categories',$categories);
+        return view('cards.card-create', compact('categories','messageError'));
     }
 
 

@@ -41,7 +41,7 @@ class CategoriesTest extends TestCase
 
         $response
         ->assertSessionHasNoErrors()
-        ->assertRedirect(route('admin-painel.cards', absolute:false));
+        ->assertRedirect(route('categories.index', absolute:false));
     }
 
     public function test_create_category_regex(): void
