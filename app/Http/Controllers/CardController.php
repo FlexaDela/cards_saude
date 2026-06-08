@@ -56,8 +56,10 @@ class CardController extends Controller
     public function create(Request $request): View
     {
         $messageError = $request->session()->get('message.error');
+        $messageSuccess = $request->session()->get('message.success');
         $categories = Category::all();
-        return view('cards.card-create', compact('categories','messageError'));
+
+        return view('cards.card-create', compact('categories','messageError','messageSuccess'));
     }
 
 
@@ -188,7 +190,9 @@ class CardController extends Controller
 
     public function destroyImage(Request $request ,CardImage $cardImage): RedirectResponse
     {
-        if($cardImage->principal === false){
+     
+
+        if($cardImage->principal === 0){
             try
             {
                 $cardImage->delete();
@@ -212,8 +216,29 @@ class CardController extends Controller
         return back();
     }
 
-    public function makeCoverImage(Card $card, CardImage $cardImage): RedirectResponse
+    public function makeCoverImage(Request $request,CardImage $cardImage): RedirectResponse
     {
-        return back();
+        try
+        {
+            DB::transaction(function() use($cardImage) {
+
+                CardImage::where('card_id', $cardImage->card_id)
+                ->update(['principal' => false]);
+
+                $cardImage->principal = true;
+                $cardImage->save();
+
+            });
+
+            $request->session()->flash('message.success','Capa alterada com sucesso!');
+
+            return back();
+        } catch(Throwable $e)
+        {
+            Log::error("Erro ao alterar a capa de id '$cardImage->id' " . $e->getMessage());
+
+            $request->session()->flash('message.error','Ocorreu um erro ao alterar a capa!');
+            return back();
+        }
     }
 }
