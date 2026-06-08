@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Cards;
+namespace Tests\Feature\Admin\Cards;
 
 use App\Models\Card;
 use App\Models\CardImage;
@@ -140,7 +140,7 @@ class CardControllerTest extends TestCase
 
         $cardImage = CardImage::factory()->create([
             'path' => 'cards/teste/imagem.jpg',
-            'principal' => false 
+            'principal' => false
         ]);
 
         // Coloca o arquivo no disco fake

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Cards;
+namespace Tests\Feature\Admin\Cards;
 
 use App\Traits\ImageUploadTrait;
 use Illuminate\Http\Request;
